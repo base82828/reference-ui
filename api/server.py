@@ -5,6 +5,7 @@ import datetime
 import os
 import redis
 from dotenv import load_dotenv
+import telegram
 
 app = Flask(__name__)
 CORS(app, origins=[os.getenv('FRONTEND_URL')])
@@ -35,6 +36,7 @@ redis_client = redis.Redis(
 
 # Remove hardcoded bot token
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+bot = telegram.Bot(token=BOT_TOKEN)
 
 @app.route('/validate-key', methods=['POST'])
 def validate_key():
@@ -115,6 +117,12 @@ def chat():
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({'status': 'alive'})
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    update = telegram.Update.de_json(request.get_json(), bot)
+    # Your bot logic here
+    return 'OK'
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
