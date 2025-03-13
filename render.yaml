@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: telegram-bot-api
+    env: python
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: gunicorn --chdir api server:app
+    envVars:
+      - key: REDIS_HOST
+        value: redis-18791.c264.ap-south-1-1.ec2.redns.redis-cloud.com
+      - key: REDIS_PORT
+        value: 18791
+      - key: BOT_TOKEN
+        sync: false
+      - key: REDIS_PASSWORD
+        sync: false
